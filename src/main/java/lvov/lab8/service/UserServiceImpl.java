@@ -4,12 +4,12 @@ import lvov.lab8.dto.UserDto;
 import lvov.lab8.entity.Role;
 import lvov.lab8.repository.RoleRepository;
 import lvov.lab8.repository.UserRepository;
-import org.apache.catalina.User;
+import lvov.lab8.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.net.PasswordAuthentication;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
     }
     @Override
-    public User findUserByEmail(String email){ return userRepository.fingByEmail(email);}
+    public User findUserByEmail(String email){ return userRepository.findByEmail(email);}
     @Override
     public List<UserDto> findAllUsers(){
         List<User> users = userRepository.findAll();
@@ -51,6 +51,14 @@ public class UserServiceImpl implements UserService {
                 .map((user)-> mapToUserDto(user))
                 .collect(Collectors.toList());
 
+    }
+    private UserDto mapToUserDto (User user){
+        UserDto userDto = new UserDto();
+        String[] str = user.getName().split(" ");
+        userDto.setFirstName(str[0]);
+        userDto.setLastName(str[1]);
+        userDto.setEmail(user.getEmail());
+        return userDto;
     }
 
     private Role checkRoleExist(){
